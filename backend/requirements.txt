@@ -1,0 +1,15 @@
+# 中古車在庫管理システム — バックエンド依存パッケージ
+fastapi==0.115.6
+uvicorn[standard]==0.34.0
+SQLAlchemy==2.0.36
+alembic==1.14.0
+pydantic==2.10.4
+pydantic-settings==2.7.0
+python-dotenv==1.0.1
+
+# LLM（Gemini）。GEMINI_API_KEY 未設定時は MockParser にフォールバックするため実行時は必須ではない
+google-genai==0.3.0
+
+# テスト
+pytest==8.3.4
+httpx==0.28.1
