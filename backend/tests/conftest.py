@@ -15,6 +15,8 @@ from sqlalchemy.orm import Session, sessionmaker
 
 from app.clock import now_iso, plus_minutes_iso
 from app.db import create_sqlite_engine, get_db
+from app.llm import get_parser
+from app.llm.mock import MockParser
 from app.main import app
 from app.models import Base, User, Vehicle, VehicleEvent
 
@@ -53,9 +55,17 @@ def client(session_factory: sessionmaker) -> Iterator[TestClient]:
             session.close()
 
     app.dependency_overrides[get_db] = override_get_db
+    # GEMINI_API_KEY が設定されていても実通信させない（SPEC §7.8）
+    app.dependency_overrides[get_parser] = lambda: MockParser()
     with TestClient(app) as test_client:
         yield test_client
     app.dependency_overrides.clear()
+
+
+@pytest.fixture
+def parser() -> MockParser:
+    """パーサーを直接検証するためのフィクスチャ。"""
+    return MockParser()
 
 
 @pytest.fixture
